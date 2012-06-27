@@ -1,9 +1,11 @@
 object Main {
 
   def main(args: Array[String]) {
-    val rawInput = "thisisabrainfuck%%%%interpreterlololol>+++++++6+6+8[9<0+3+2skldfjalksdf+2ldjfald+5ldkfjdl+6+8+9+4>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-]<.>+++++++++++[<++++++++>-]<-.--------.+++>.------.--------.[-]>++++++++[<++++>-]<+.[-]++++++++++."
+    /*val rawInput = "thisisabrainfuck%%%%interpreterlololol>+++++++6+6+8[9<0+3+2skldfjalksdf+2ldjfald+5ldkfjdl+6+8+9+4>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-]<.>+++++++++++[<++++++++>-]<-.--------.+++>.------.--------.[-]>++++++++[<++++>-]<+.[-]++++++++++."*/
+    /*val rawInput = " +++++++++++++++++++++++++++++++++   ."*/
+   val rawInput = "+."
     val bf = BrainFuck(rawInput)
-    bf eval
+    bf.eval
   }
 }
 
@@ -14,19 +16,18 @@ class BrainFuck (program: String) {
   def eval {
     while (tape.canMoveRight) {
       tape.moveRight
-      tape.get
-    //DUMMY MATCH
-    /*'X' match {*/
-    /*    case '>' => data.shiftRight*/
-    /*    case '<' => data.shiftLeft*/
-    /*    case '+' => data.increment*/
-    /*    case '-' => data.decrement*/
-    /*    case '.' => data.out*/
-    /*    case ',' => data.in*/
-    /*    case '[' if data.get == 0 => tape.jumpForward*/
-    /*    case ']' if data.get != 0 => tape.jumpBackward*/
-    /*    case _ => */
-    /*}*/
+      val symbol = tape.get
+      symbol match {
+          case '>' => data.shiftRight
+          case '<' => data.shiftLeft
+          case '+' => data.increment
+          case '-' => data.decrement
+          case '.' => data.out
+          case ',' => data.in
+          case '[' if data.get == 0 => tape.jumpForward
+          case ']' if data.get != 0 => tape.jumpBackward
+          case _ => 
+      }
     }
   }
 }
@@ -46,10 +47,9 @@ object BrainFuck {
 
 class Tape (program: String) {
 
-  var pointerIndex = 0
+  var pointerIndex = -1
 
   def get = {
-    println("size:" + program.size + ", index:" + pointerIndex)
     pointerIndex match {
       case x if x < 0 => throw new Exception("Cannot get symbol; Below tape head")
       case x if x >= program.size => throw new Exception("Cannot get symbol; Past tape tail")
@@ -58,7 +58,8 @@ class Tape (program: String) {
   }
 
   def canMoveRight = {
-    pointerIndex >= 0 && pointerIndex < program.size - 1
+    val nextIndex = pointerIndex + 1
+    nextIndex >= 0 && nextIndex < program.size
   }
 
   def moveRight {
@@ -89,17 +90,12 @@ class DataRegister {
     data.apply(pointerIndex)
   }
 
-  def set (char: Char){
-    data.update(pointerIndex, char.toInt)
-  }
-
   def increment {
     data.update(pointerIndex, get + 1)    
   }
 
   def decrement {
-    if (get > 0)
-      data.update(pointerIndex, get - 1)    
+    if (get <= 0) data.update(pointerIndex, get - 1)    
   }
 
   def shiftRight {
