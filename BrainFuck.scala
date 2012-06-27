@@ -14,6 +14,10 @@ class BrainFuck (program: String) {
   val data = new DataRegister
 
   def eval {
+    while (tape.canMoveRight) {
+      tape.moveRight
+      tape.get
+      /*println(tape.get)*/
     //DUMMY MATCH
     /*'X' match {*/
     /*    case '>' => data.shiftRight*/
@@ -26,6 +30,7 @@ class BrainFuck (program: String) {
     /*    case ']' if data.get != 0 => tape.jumpBackward*/
     /*    case _ => */
     /*}*/
+    }
   }
 }
 
@@ -43,6 +48,31 @@ object BrainFuck {
 }
 
 class Tape (program: String) {
+
+  var pointerIndex = 0
+
+  def get = {
+    println("size:" + program.size + ", index:" + pointerIndex)
+    pointerIndex match {
+      case x if x < 0 => throw new Exception("Cannot get symbol; Below tape head")
+      case x if x >= program.size => throw new Exception("Cannot get symbol; Past tape tail")
+      case _  => program.apply(pointerIndex)
+    }
+  }
+
+  def canMoveRight = {
+    pointerIndex >= 0 && pointerIndex < program.size - 1
+  }
+
+  def moveRight {
+    if ( pointerIndex < program.length - 1) pointerIndex = pointerIndex + 1
+    else throw new Exception("Cannot increment pointer; at end of tape.")
+  }
+
+  def moveLeft {
+    if (pointerIndex > 0) pointerIndex = pointerIndex - 1
+    else throw new Exception("Cannot decrement pointer; at beginning of tape.")
+  }
 
   def jumpForward {
       
@@ -77,12 +107,12 @@ class DataRegister {
 
   def shiftRight {
     if (pointerIndex < data.size) pointerIndex = pointerIndex + 1
-    else throw new Exception("Cannot increment pointer; at end of tape.")
+    else throw new Exception("Cannot increment pointer; at end of data register.")
   }
 
   def shiftLeft {
     if (pointerIndex > 0) pointerIndex = pointerIndex - 1
-    else throw new Exception("Cannot decrement pointer; at beginning of tape.")
+    else throw new Exception("Cannot decrement pointer; at beginning of data register.")
   }
 
   def out {
