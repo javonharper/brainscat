@@ -71,7 +71,8 @@ class DataRegister {
   }
 
   def decrement {
-    data.update(pointerIndex, get - 1)    
+    if (get > 0)
+      data.update(pointerIndex, get - 1)    
   }
 
   def shiftRight {
