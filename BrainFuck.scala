@@ -1,5 +1,3 @@
-import java.util.Scanner
-
 object Main {
 
   def main(args: Array[String]) {
@@ -17,7 +15,6 @@ class BrainFuck (program: String) {
     while (tape.canMoveRight) {
       tape.moveRight
       tape.get
-      /*println(tape.get)*/
     //DUMMY MATCH
     /*'X' match {*/
     /*    case '>' => data.shiftRight*/
