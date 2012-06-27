@@ -2,8 +2,7 @@ object Main {
 
   def main(args: Array[String]) {
     /*val rawInput = "thisisabrainfuck%%%%interpreterlololol>+++++++6+6+8[9<0+3+2skldfjalksdf+2ldjfald+5ldkfjdl+6+8+9+4>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-]<.>+++++++++++[<++++++++>-]<-.--------.+++>.------.--------.[-]>++++++++[<++++>-]<+.[-]++++++++++."*/
-    /*val rawInput = " +++++++++++++++++++++++++++++++++   ."*/
-   val rawInput = "+."
+    val rawInput = "  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  ."
     val bf = BrainFuck(rawInput)
     bf.eval
   }
@@ -110,7 +109,7 @@ class DataRegister {
 
   def out {
     print(" ");
-    print(get)
+    print(get.toChar)
   }
 
   def in {
