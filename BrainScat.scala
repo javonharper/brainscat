@@ -3,12 +3,12 @@ object Main {
   def main(args: Array[String]) {
     /*val rawInput = "thisisabrainfuck%%%%interpreterlololol>+++++++6+6+8[9<0+3+2skldfjalksdf+2ldjfald+5ldkfjdl+6+8+9+4>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-]<.>+++++++++++[<++++++++>-]<-.--------.+++>.------.--------.[-]>++++++++[<++++>-]<+.[-]++++++++++."*/
     val rawInput = ""
-    val bf = BrainFuck(rawInput)
+    val bf = BrainScat(rawInput)
     bf.eval
   }
 }
 
-class BrainFuck (program: String) {
+class BrainScat (program: String) {
   val tape = new Tape(program)
   val data = new DataRegister
 
@@ -32,12 +32,12 @@ class BrainFuck (program: String) {
   }
 }
 
-object BrainFuck {
+object BrainScat {
 
   val validChars = "+-[]<>,."
 
   def apply(program: String) = {
-    new BrainFuck(sanitize(program));
+    new BrainScat(sanitize(program));
   }
 
   def sanitize(input: String) = { 
