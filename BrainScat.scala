@@ -1,8 +1,7 @@
 object Main {
 
   def main(args: Array[String]) {
-    /*val rawInput = "thisisabrainfuck%%%%interpreterlololol>+++++++6+6+8[9<0+3+2skldfjalksdf+2ldjfald+5ldkfjdl+6+8+9+4>-]<.>+++++++[<++++>-]<+.+++++++..+++.[-]>++++++++[<++++>-]<.>+++++++++++[<++++++++>-]<-.--------.+++>.------.--------.[-]>++++++++[<++++>-]<+.[-]++++++++++."*/
-    val rawInput = ""
+    val rawInput = " +++these+++ are++++[>+++comments++++>+++in+++a++++>+++brainfuck>+<<<<-]program!!!>++.>+.++++lol+++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
     val bf = BrainScat(rawInput)
     bf.eval
   }
@@ -16,6 +15,7 @@ class BrainScat (program: String) {
     while (tape.canMoveRight) {
       tape.moveRight
       val symbol = tape.get
+      val reg = data.get
       symbol match {
           case '>' => data.shiftRight
           case '<' => data.shiftLeft
@@ -28,7 +28,7 @@ class BrainScat (program: String) {
           case _ => 
       }
     }
-    println("Reached end of input; Exiting")
+    println("\nReached end of input; Exiting.")
   }
 }
 
@@ -59,7 +59,7 @@ class Tape (program: String) {
 
   def canMoveRight = {
     val nextIndex = pointerIndex + 1
-    nextIndex >= 0 && nextIndex < program.size
+    nextIndex < program.size
   }
 
   def moveRight {
@@ -71,13 +71,34 @@ class Tape (program: String) {
     if (pointerIndex > 0) pointerIndex = pointerIndex - 1
     else throw new Exception("Cannot decrement pointer; at beginning of tape.")
   }
+  
+  def canMoveLeft = {
+    val prevIndex = pointerIndex - 1;
+    prevIndex >= 0
+  }
 
   def jumpForward {
-      
+	var psuedoStack = 1
+    while(canMoveRight && psuedoStack != 0) {
+      moveRight
+      get match {
+      	case '[' => psuedoStack = psuedoStack + 1
+      	case ']' => psuedoStack = psuedoStack - 1
+      	case _ =>
+      }
+    }
   }
 
   def jumpBackward {
-      
+    var psuedoStack = 1
+    while(canMoveLeft && psuedoStack != 0) {
+      moveLeft
+      get match {
+      	case ']' => psuedoStack = psuedoStack + 1
+      	case '[' => psuedoStack = psuedoStack - 1
+      	case _ =>
+      }
+    }
   }
 }
 
@@ -95,7 +116,7 @@ class DataRegister {
   }
 
   def decrement {
-    if (get <= 0) data.update(pointerIndex, get - 1)    
+    if (get > 0) data.update(pointerIndex, get - 1)    
   }
 
   def shiftRight {
@@ -109,7 +130,6 @@ class DataRegister {
   }
 
   def out {
-    print(" ");
     print(get.toChar)
   }
 
@@ -117,3 +137,4 @@ class DataRegister {
     //TODO?
   }
 }
+
