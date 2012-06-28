@@ -15,7 +15,6 @@ class BrainScat (program: String) {
     while (tape.canMoveRight) {
       tape.moveRight
       val symbol = tape.get
-      val reg = data.get
       symbol match {
           case '>' => data.shiftRight
           case '<' => data.shiftLeft
