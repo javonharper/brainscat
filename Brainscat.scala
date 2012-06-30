@@ -2,12 +2,12 @@ object Main {
 
   def main(args: Array[String]) {
     val rawInput = " +++these+++ are++++[>+++comments++++>+++in+++a++++>+++brainfuck>+<<<<-]program!!!>++.>+.++++lol+++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
-    val bf = BrainScat(rawInput)
+    val bf = Brainscat(rawInput)
     bf.eval
   }
 }
 
-class BrainScat (program: String) {
+class Brainscat (program: String) {
   val tape = new Tape(program)
   val data = new DataRegister
 
@@ -31,12 +31,12 @@ class BrainScat (program: String) {
   }
 }
 
-object BrainScat {
+object Brainscat {
 
   val validChars = "+-[]<>,."
 
   def apply(program: String) = {
-    new BrainScat(sanitize(program));
+    new Brainscat(sanitize(program));
   }
 
   def sanitize(input: String) = { 
