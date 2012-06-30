@@ -52,7 +52,7 @@ class Tape (program: String) {
     pointerIndex match {
       case x if x < 0 => throw new Exception("Cannot get symbol; Below tape head")
       case x if x >= program.size => throw new Exception("Cannot get symbol; Past tape tail")
-      case _  => program.apply(pointerIndex)
+      case _  => program(pointerIndex)
     }
   }
 
@@ -107,7 +107,7 @@ class DataRegister {
   var pointerIndex = 0
 
   def get = {
-    data.apply(pointerIndex)
+    data(pointerIndex)
   }
 
   def increment {
