@@ -7,23 +7,23 @@ object Main {
   }
 }
 
-class Brainscat (program: String) {
-  val tape = new Tape(program)
+class Brainscat (symbols: String) {
+  val program = new Program(symbols)
   val data = new DataRegister
 
   def eval {
-    while (tape.canMoveRight) {
-      tape.moveRight
-      val symbol = tape.get
+    while (program.canMoveRight) {
+      program.moveRight()
+      val symbol = program.get
       symbol match {
-          case '>' => data.shiftRight
-          case '<' => data.shiftLeft
-          case '+' => data.increment
-          case '-' => data.decrement
+          case '>' => data.shiftRight()
+          case '<' => data.shiftLeft()
+          case '+' => data.increment()
+          case '-' => data.decrement()
           case '.' => data.out
           case ',' => data.in
-          case '[' if data.get == 0 => tape.jumpForward
-          case ']' if data.get != 0 => tape.jumpBackward
+          case '[' if data.get == 0 => program.jumpForward()
+          case ']' if data.get != 0 => program.jumpBackward()
           case _ => 
       }
     }
@@ -44,14 +44,14 @@ object Brainscat {
   }
 }
 
-class Tape (program: String) {
+class Program (program: String) {
 
   var pointerIndex = -1
 
   def get = {
     pointerIndex match {
-      case x if x < 0 => throw new Exception("Cannot get symbol; Below tape head")
-      case x if x >= program.size => throw new Exception("Cannot get symbol; Past tape tail")
+      case x if x < 0 => throw new Exception("Cannot get symbol; At position before program beginning")
+      case x if x >= program.size => throw new Exception("Cannot get symbol; At position before program end")
       case _  => program(pointerIndex)
     }
   }
@@ -61,14 +61,14 @@ class Tape (program: String) {
     nextIndex < program.size
   }
 
-  def moveRight {
+  def moveRight() {
     if ( pointerIndex < program.length - 1) pointerIndex = pointerIndex + 1
-    else throw new Exception("Cannot increment pointer; at end of tape.")
+    else throw new Exception("Cannot increment pointer; at end of program.")
   }
 
-  def moveLeft {
+  def moveLeft() {
     if (pointerIndex > 0) pointerIndex = pointerIndex - 1
-    else throw new Exception("Cannot decrement pointer; at beginning of tape.")
+    else throw new Exception("Cannot decrement pointer; at beginning of program.")
   }
   
   def canMoveLeft = {
@@ -76,10 +76,10 @@ class Tape (program: String) {
     prevIndex >= 0
   }
 
-  def jumpForward {
+  def jumpForward() {
 	var psuedoStack = 1
     while(canMoveRight && psuedoStack != 0) {
-      moveRight
+      moveRight()
       get match {
       	case '[' => psuedoStack = psuedoStack + 1
       	case ']' => psuedoStack = psuedoStack - 1
@@ -88,10 +88,10 @@ class Tape (program: String) {
     }
   }
 
-  def jumpBackward {
+  def jumpBackward() {
     var psuedoStack = 1
     while(canMoveLeft && psuedoStack != 0) {
-      moveLeft
+      moveLeft()
       get match {
       	case ']' => psuedoStack = psuedoStack + 1
       	case '[' => psuedoStack = psuedoStack - 1
@@ -110,20 +110,20 @@ class DataRegister {
     data(pointerIndex)
   }
 
-  def increment {
+  def increment() {
     data.update(pointerIndex, get + 1)    
   }
 
-  def decrement {
+  def decrement() {
     if (get > 0) data.update(pointerIndex, get - 1)    
   }
 
-  def shiftRight {
+  def shiftRight() {
     if (pointerIndex < data.size) pointerIndex = pointerIndex + 1
     else throw new Exception("Cannot increment pointer; at end of data register.")
   }
 
-  def shiftLeft {
+  def shiftLeft() {
     if (pointerIndex > 0) pointerIndex = pointerIndex - 1
     else throw new Exception("Cannot decrement pointer; at beginning of data register.")
   }
